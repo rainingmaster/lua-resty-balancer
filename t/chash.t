@@ -286,3 +286,34 @@ diff: 9745
 --- no_error_log
 [error]
 --- timeout: 30
+
+
+
+=== TEST 5: decimal weight
+--- http_config eval: $::HttpConfig
+--- config
+    location /t {
+        content_by_lua_block {
+            local resty_chash = require "resty.chash"
+
+            local servers = {
+                ["server1"] = 36.8,
+                ["server2"] = 16,
+                ["server3"] = 88.9,
+                ["server4"] = 25.9,
+                ["server5"] = 32.3,
+            }
+
+            for i = 1, 15 do
+                local chash = resty_chash:new(servers)
+            end
+            ngx.say("success")
+        }
+    }
+--- request
+GET /t
+--- response_body
+success
+--- no_error_log
+[error]
+--- timeout: 30
